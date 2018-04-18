@@ -7,12 +7,23 @@ import by.korneenko.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
+@Controller
 public class AuthorizationController {
 
     UserService userService;
+
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    String getSinglePage() {
+        return "index";
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    String getRegistration() {
+        return "registration";
+    }
 
     @PostMapping(value = "/authorization")
     ResponseEntity<?> authorization(@RequestBody String login,@RequestBody String password){

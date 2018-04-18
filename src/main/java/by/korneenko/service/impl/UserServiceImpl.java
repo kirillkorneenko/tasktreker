@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private CodeConfimationDao codeDao;
 
     @Override
+    @Transactional
     public UserEntity createUser(UserEntity user, String role) {
         if(role.equals("manager")){
             user.setRoleByIdRole(roleDao.getByKey(1L));
@@ -41,19 +42,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public CodeConfirmationEntity getCodeConfirmation(String code) {
         return codeDao.getByCode(code);
     }
 
     @Override
+    @Transactional
     public UserEntity updateUser(UserEntity user) {
         userDao.update(user);
         return userDao.getByUserName(user.getName());
     }
 
     @Override
+    @Transactional
     public UserEntity getByUserName(String name) {
         return userDao.getByUserName(name);
+    }
+
+    @Override
+    @Transactional
+    public List<UserEntity> getDeveloperByNameOrSurname(String name, String surname) {
+        return userDao.findUserByNameOrSurname(name,surname);
     }
 
 

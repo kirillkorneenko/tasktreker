@@ -12,7 +12,7 @@ public class TaskEntity {
     private Long id;
     private String name;
     private String taskText;
-    private String status;
+    private Task status;
     private Long idProject;
 
 
@@ -63,9 +63,9 @@ public class TaskEntity {
 
     @Basic
     @Column(name = "status", nullable = false)
-    public String getStatus() { return status; }
+    public Task getStatus() { return status; }
 
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(Task status) { this.status = status; }
 
     @Override
     public boolean equals(Object o) {

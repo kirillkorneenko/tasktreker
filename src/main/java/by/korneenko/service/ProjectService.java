@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ProjectService {
 
-    ProjectEntity createProject(ProjectEntity project);
-    List<ProjectEntity> getProjectsByUserCreated (UserEntity user);
-    List<ProjectEntity> getProjectByUser(UserEntity user);
-    void setDeveloperFromProject(UserEntity user, ProjectEntity project);
+    ProjectEntity createProject(String name, String text);
+    List<ProjectEntity> getProjectsByUserCreated ();
+    List<ProjectEntity> getProjectByUser();
+    void setDeveloperFromProject(Long id, String name);
 }

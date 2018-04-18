@@ -1,14 +1,17 @@
 package by.korneenko.controller;
 
-import by.korneenko.dao.ProjectDao;
 import by.korneenko.service.ProjectService;
 import by.korneenko.service.TaskService;
 import by.korneenko.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+@Controller
+@PreAuthorize("hasRole('MANAGER')")
 public class ManagerController {
 
     @Autowired
@@ -18,35 +21,30 @@ public class ManagerController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "admin/projects/{name}/{description}", method = RequestMethod.POST)
-    ResponseEntity addProject(@PathVariable String name, @PathVariable String description) {
-        projectService.saveProject(name, description);
+    @PostMapping(value = "/project")
+    ResponseEntity addProject(@RequestBody String name, @RequestBody String text) {
+        projectService.createProject(name, text);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/users/", method = RequestMethod.GET)
-    ResponseEntity getUsersByName(@RequestParam String name, @RequestParam String lastName) {
-        return new ResponseEntity(userService.getDevelopersbyfilter(name, lastName), HttpStatus.OK);
+    @GetMapping(value = "/user?name={name}&lastName={lastName}")
+    ResponseEntity getUsersByName(@PathVariable String name, @PathVariable String lastName) {
+        return new ResponseEntity(userService.getDeveloperByNameOrSurname(name, lastName), HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = "/projects/{id}/{username}", method = RequestMethod.POST)
-    ResponseEntity addProjectToUser(@PathVariable Long id, @PathVariable String username) throws CustomException {
-
-        projectService.addProjectToUser(id, username);
+    @PostMapping(value = "/projects")
+    ResponseEntity addProjectToUser(@RequestBody Long id, @RequestBody String username) {
+        projectService.setDeveloperFromProject(id, username);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/tasks/{id}/{username}", method = RequestMethod.POST)
-    ResponseEntity addTaskToUser(@PathVariable Long id, @PathVariable String username) throws CustomException {
-        taskService.addDeveloperToTask(id, username);
+    @PostMapping(value = "/tasks")
+    ResponseEntity addTaskToUser(@RequestBody Long id, @RequestBody String username) {
+        taskService.setDeveloperFromTask(id, username);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity error(CustomException ex) {
-        return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
 
 }
